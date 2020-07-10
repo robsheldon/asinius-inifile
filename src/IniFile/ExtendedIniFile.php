@@ -145,7 +145,7 @@ class ExtendedIniFile extends \Asinius\IniFile\ClassicIniFile
             $line_parts[1] = trim(substr($line_parts[1], 1));
             list($keys, $value) = $line_parts;
             $keys = array_map(function($key){
-                $key = trim($key);
+                $key = trim($key, ', ');
                 while ( strlen($key) > 0 && ($key[0] == '"' || $key[0] == "'") && $key[strlen($key)-1] == $key[0] ) {
                     $key = substr($key, 1, -1);
                 }
