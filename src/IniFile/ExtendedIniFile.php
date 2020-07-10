@@ -143,16 +143,21 @@ class ExtendedIniFile extends \Asinius\IniFile\ClassicIniFile
                 throw new \RuntimeException('Error parsing ' . $this->_filepath . ': No assignment operator (=) was found on line ' . count($this->_lines), EPARSE);
             }
             $line_parts[1] = trim(substr($line_parts[1], 1));
-            list($key, $value) = $line_parts;
-            while ( strlen($key) > 0 && ($key[0] == '"' || $key[0] == "'") && $key[strlen($key)-1] == $key[0] ) {
-                $key = substr($key, 1, -1);
-            }
-            $key = trim($key);
-            if ( strlen($key) < 1 ) {
-                throw new \RuntimeException('Error parsing ' . $this->_filepath . ': No valid key was found on line ' . count($this->_lines), EPARSE);
-            }
+            list($keys, $value) = $line_parts;
+            $keys = array_map(function($key){
+                $key = trim($key);
+                while ( strlen($key) > 0 && ($key[0] == '"' || $key[0] == "'") && $key[strlen($key)-1] == $key[0] ) {
+                    $key = substr($key, 1, -1);
+                }
+                return $key;
+            }, \Asinius\Functions::str_chunk($key, ',', 0, \Asinius\Functions::DEFAULT_QUOTES));
             $value = static::_unquote_and_typecast($value);
-            $section_values[$key] = $value;
+            foreach ($keys as $key) {
+                if ( strlen($key) < 1 ) {
+                    throw new \RuntimeException('Error parsing ' . $this->_filepath . ': An invalid key was found on line ' . count($this->_lines), EPARSE);
+                }
+                $section_values[$key] = $value;
+            }
         }
         if ( count($section_values) > 0 ) {
             $this->_store([$current_section], [$section_values]);
