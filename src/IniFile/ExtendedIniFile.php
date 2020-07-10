@@ -150,7 +150,7 @@ class ExtendedIniFile extends \Asinius\IniFile\ClassicIniFile
                     $key = substr($key, 1, -1);
                 }
                 return $key;
-            }, \Asinius\Functions::str_chunk($key, ',', 0, \Asinius\Functions::DEFAULT_QUOTES));
+            }, \Asinius\Functions::str_chunk($keys, ',', 0, \Asinius\Functions::DEFAULT_QUOTES));
             $value = static::_unquote_and_typecast($value);
             foreach ($keys as $key) {
                 if ( strlen($key) < 1 ) {
