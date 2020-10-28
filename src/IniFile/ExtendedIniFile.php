@@ -145,12 +145,12 @@ class ExtendedIniFile extends \Asinius\IniFile\ClassicIniFile
             $line_parts[1] = trim(substr($line_parts[1], 1));
             list($keys, $value) = $line_parts;
             $keys = array_map(function($key){
-                $key = trim($key, ', ');
+                $key = trim($key);
                 while ( strlen($key) > 0 && ($key[0] == '"' || $key[0] == "'") && $key[strlen($key)-1] == $key[0] ) {
                     $key = substr($key, 1, -1);
                 }
                 return $key;
-            }, \Asinius\Functions::str_chunk($keys, ',', 0, \Asinius\Functions::DEFAULT_QUOTES));
+            }, \Asinius\Functions::str_chunk($keys, ',', 0, \Asinius\Functions::DEFAULT_QUOTES, true));
             $value = static::_unquote_and_typecast($value);
             foreach ($keys as $key) {
                 if ( strlen($key) < 1 ) {
